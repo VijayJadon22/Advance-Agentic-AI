@@ -34,6 +34,10 @@ graph_builder.add_edge("chatbot", END)
 # Compile the graph
 graph = graph_builder.compile()
 
-response = graph.invoke({"messages": "Hi There"})
-print(response["messages"][0].content)
-print(response["messages"][1].content)
+# response = graph.invoke({"messages": "Hi There"})
+# print(response["messages"][0].content)
+# print(response["messages"][1].content)
+
+for event in graph.stream({"messages": "Hi There How are you"}):
+    for value in event.values():
+        print(value["messages"][-1].content)
