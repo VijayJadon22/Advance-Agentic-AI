@@ -56,7 +56,28 @@ response = graph.invoke({"messages": "What is the recent AI news?"})
 for m in response["messages"]:
     m.pretty_print()
 
-response = graph.invoke({"messages": "What is recent AI news and then tell me What is 4*8?"})
+response = graph.invoke(
+    {"messages": "What is recent AI news and then tell me What is 4*8?"}
+)
+
+
+def get_text(content):
+    if isinstance(content, str):
+        return content
+
+    if isinstance(content, list):
+        return "\n".join(
+            block["text"]
+            for block in content
+            if isinstance(block, dict) and "text" in block
+        )
+
+    return str(content)
+
 
 for m in response["messages"]:
-    m.pretty_print()
+    if m.type == "ai" and not m.tool_calls:
+        print("AI:", get_text(m.content))
+
+    elif m.type == "tool":
+        print(f"Tool ({m.name}):", get_text(m.content))
