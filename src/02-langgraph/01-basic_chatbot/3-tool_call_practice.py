@@ -56,7 +56,7 @@ response = graph.invoke({"messages": "What is the recent AI news?"})
 for m in response["messages"]:
     m.pretty_print()
 
-response = graph.invoke({"messages": "What is 4*8"})
+response = graph.invoke({"messages": "What is recent AI news and then tell me What is 4*8?"})
 
 for m in response["messages"]:
     m.pretty_print()
