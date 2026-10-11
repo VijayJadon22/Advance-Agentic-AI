@@ -6,6 +6,7 @@ from typing_extensions import Annotated, TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph import add_messages
 from langgraph.prebuilt import ToolNode
+import asyncio
 
 load_dotenv()
 
@@ -31,7 +32,7 @@ graph_builder.add_edge("superbot", END)
 
 graph = graph_builder.compile(checkpointer=memory)
 
-config = {"configurable": {"thread_id": "user1"}}
+config = {"configurable": {"thread_id": "user2"}}
 
 # Invoke way
 # response = graph.invoke(
@@ -54,12 +55,31 @@ config = {"configurable": {"thread_id": "user1"}}
 # values : This streams the full state of the graph after each node is called.
 # updates : This streams updates to the state of the graph after each node is called.
 
-for chunk in graph.stream(
-    {
-        "messages": "Hi my name is Vijay Jadon and I love football my favorite team is Real Madrid and favorite player is Cristiano Ronaldo."
-    },
-    config=config,
-    stream_mode="updates",
-):
-    print(chunk)
+# for chunk in graph.stream(
+#     {
+#         "messages": "Hi my name is Vijay Jadon and I love football my favorite team is Real Madrid and favorite player is Cristiano Ronaldo."
+#     },
+#     config=config,
+#     stream_mode="updates",
+# ):
+#     print(chunk)
 
+
+async def main():
+
+    async for event in graph.astream_events(
+        {
+            "messages": [
+                {
+                    "role": "user",
+                    "content": "Hi my name is Vijay Jadon and I love football. My favorite team is Real Madrid and my favorite player is Cristiano Ronaldo.",
+                }
+            ]
+        },
+        config=config,
+        version="v2",
+    ):
+        print(event)
+
+
+asyncio.run(main())
