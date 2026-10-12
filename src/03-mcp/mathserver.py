@@ -3,13 +3,13 @@ from mcp.server.fastmcp import FastMCP
 mcp = FastMCP("Math")
 
 
-@mcp.tool
+@mcp.tool()
 def add(a: int, b: int) -> int:
     """Add two numbers"""
     return a + b
 
 
-@mcp.tool
+@mcp.tool()
 def multiply(a: int, b: int) -> int:
     """Multiple two numbers"""
     return a * b
